@@ -1,0 +1,273 @@
+@extends('backend.layouts.master')
+@section('title')
+    Studio Bill
+@endsection
+@section('css')
+
+@endsection
+<!-- page content -->
+@section('content')
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                 
+                
+            <div class="clearfix"></div>
+            
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        
+                        <div class="x_content">
+                            <div ng-app="app">
+<div class="container" ng-controller="feeRecipt">
+                            <div class="row">
+    <div id='printMe'>
+    <!-- New payment page -->
+    <div class="receipt-main col-xs-10 col-sm-10 col-md-8 col-xs-offset-1 col-sm-offset-1 col-md-offset-2" id="paymentRecipt">
+   <html>
+  <head>
+    <meta charset="utf-8" /> <!-- first element so that the encoding is applied to the title etc. -->
+   
+
+  </head>
+            
+                 <body>
+    <header> 
+      <address class="return-address">
+        <div class="col-xs-4 col-sm-4 col-md-4">
+            <div class="receipt-left">
+                <img class="img-responsive" alt="student-image" src="{{$company->image}}" style="width: 50%;hight: 40%; border-radius: 450px;">
+           
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-8 col-md-8">
+            <div class="receipt-right">
+               <p ><h3><strong>{{$company->company_name}}</strong></h3></p>
+                <p  ><strong>{{$company->city}}</strong></p>
+                <p ><strong>{{$company->contact_no}}</strong></p>
+                 
+            </div>
+            <hr>
+        </div>
+        
+         
+      </address>
+      <address class="return-address">
+        <div class="col-xs-4 col-sm-8 col-md-8">
+            <div class="receipt-left">
+                
+                <p >Customer Name   : {{$customer->client_name}}</p>
+                <p >Mobile No       :{{$customer->phone}}</p>
+                <p >Email ID        :{{$customer->email}}</p>
+           
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4">
+            <div class="receipt-right">
+               <p >Customer ID      :{{$customer->customer_id}}</p>
+                <p >Order No        :{{$invoice_details->service_id}}</p>
+                <p >Invoice No      :{{$invoice_details->invoice_no}}</p>
+            </div>
+            
+        </div>
+        
+         
+      </address>
+     
+    </header>
+    
+    <div class="content"> <!-- use this div only if it is required for styling -->
+        
+<table border="0" align="center" class="table table-bordered table-hover" style="width:100%">
+    <thead>
+    <tr>
+        <th class="text-center">S.N.</th>
+        <th class="text-center">Service Name</th>
+        <th class="text-center">Quantity</th>
+        
+        <th class="text-center">Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php $i=1 ?>
+    @foreach($report as $all)
+    <tr>
+        <td>{{$i++}}</td>
+        <td>{{$all->size}}</td>
+        <td>{{$all->quantity}}</td>
+        
+        <td style="text-align:right">{{$all->amount}}</td>
+    </tr>
+    @endforeach
+    
+    <tr>
+        
+        <td colspan="3" style="text-align:right">Total  </td>
+        
+        <td style="text-align:right;width:30%">
+            
+           {{$invoice_details->subtotal}}
+        </td>
+    </tr>
+   
+    <tr>
+         <td colspan="3" style="text-align:right"> Advance (-) </td>
+        <td style="text-align:right">
+           
+              {{$invoice_details->paid_amt}}
+        </td>
+    </tr>
+    
+    <tr>
+         <td colspan="3" style="text-align:right">Balance  Rs.</td>
+        <td style="text-align:right">
+             @if($invoice_details->due_amt != 0)
+            {{$invoice_details->due_amt}}
+            @else
+            {{$invoice_details->subtotal - $amt_received}}
+            @endif
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<p>Prepared by: {{$all->bill_createdBy}} </p>
+<p >Date: {{date("d-m-Y")}}</p>
+<p align="center">Thank You</p>
+
+
+
+
+
+
+      </div>
+        
+       
+  </body>
+        
+
+</html>
+
+</div> 
+<button onclick="printDiv('printMe')">Print </button>
+    </div>      
+    </div> 
+    </div>      
+    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /page content -->
+@endsection
+@section('script')
+<script>
+        function printDiv(divName){
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+
+        }
+    </script>
+ <link rel="stylesheet" href="letter.css" />
+    <style type="text/css">
+
+    .receipt-main {
+        background: #ffffff none repeat scroll 0 0;
+        border-bottom: 12px solid #333333;
+        border-top: 12px solid #f7a62b;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        padding: 40px 30px !important;
+        position: relative;
+        box-shadow: 0 1px 21px #acacac;
+        color: #333333;
+        font-family: open sans;
+    }
+    .receipt-main p {
+        color: #333333;
+        font-family: open sans;
+        line-height: 1.42857;
+    }
+    .receipt-footer h1 {
+        font-size: 15px;
+        font-weight: 400 !important;
+        margin: 0 !important;
+    }
+    .receipt-main::after {
+        background: #414143 none repeat scroll 0 0;
+        content: "";
+        height: 5px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: -13px;
+    }
+    .receipt-main thead {
+        background: #414143 none repeat scroll 0 0;
+    }
+    .receipt-main thead th {
+        color:#fff;
+    }
+    .receipt-right h5 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0 0 7px 0;
+    }
+    .receipt-right p {
+        font-size: 12px;
+        margin: 0px;
+    }
+    .receipt-right p i {
+        text-align: center;
+        width: 18px;
+    }
+    .receipt-main td {
+        padding: 9px 20px !important;
+    }
+    .receipt-main th {
+        padding: 13px 20px !important;
+    }
+    .receipt-main td {
+        font-size: 13px;
+        font-weight: initial !important;
+    }
+    .receipt-main td p:last-child {
+        margin: 0;
+        padding: 0;
+    }   
+    .receipt-main td h2 {
+        font-size: 20px;
+        font-weight: 900;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    .receipt-header-mid .receipt-left h1 {
+        font-weight: 100;
+        margin: 34px 0 0;
+        text-align: right;
+        text-transform: uppercase;
+    }
+    .receipt-header-mid {
+        margin: 24px 0;
+        overflow: hidden;
+    }
+</style>
+@endsection
+
+
+
+
+
+
+
+
+
